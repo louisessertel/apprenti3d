@@ -1,0 +1,16 @@
+{
+  "name": "Apprenti 3D",
+  "short_name": "Apprenti 3D",
+  "description": "Apprendre SketchUp sur iPad en dessinant des meubles.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#02571A",
+  "theme_color": "#02571A",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

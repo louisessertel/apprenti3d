@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apprenti 3D</title>
+<meta name="theme-color" content="#02571A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Apprenti 3D">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+/* Charte Apprenti 3D : vert du logo, blanc, capitales espacées. Bandeau vert, puis une colonne de niveaux. */
+:root{
+  --brand:#02571A;
+  --brand-deep:#013F12;
+  --paper:#F2F6F3;
+  --card:#FFFFFF;
+  --ink:#14231A;
+  --muted:#55685B;
+  --line:#D3DFD6;
+  --on-brand:#FFFFFF;
+  --tint:#E3EEE5;
+  --x:#C8372D; --y:#2B8C45; --z:#2350B8;
+  --wood-top:#E6CDA3; --wood-l:#CBA877; --wood-r:#B08A58; --wood-edge:#5E4A2E;
+  --display:"Avenir Next","Avenir","Futura","Century Gothic","Segoe UI",sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"Avenir Next","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --brand:#02571A; --brand-deep:#013A10; --paper:#121710; --card:#1A2117; --ink:#E7ECE3; --muted:#9DAA96;
+    --line:#2D3828; --tint:#22301C; --x:#FF7A6E; --y:#62CF80; --z:#82A3FF;
+    --wood-top:#B99A6C; --wood-l:#977A50; --wood-r:#7C623D; --wood-edge:#20170C; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --brand:#02571A; --brand-deep:#013A10; --paper:#121710; --card:#1A2117; --ink:#E7ECE3; --muted:#9DAA96;
+  --line:#2D3828; --tint:#22301C; --x:#FF7A6E; --y:#62CF80; --z:#82A3FF;
+  --wood-top:#B99A6C; --wood-l:#977A50; --wood-r:#7C623D; --wood-edge:#20170C; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.5; -webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display); text-wrap:balance; margin:0}
+p{margin:0}
+a{color:var(--brand)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) a{color:#86D49B}}
+:root[data-theme="dark"] a{color:#86D49B}
+:focus-visible{outline:3px solid var(--brand); outline-offset:2px; border-radius:4px}
+
+.band{background:var(--brand); color:var(--on-brand); padding:calc(env(safe-area-inset-top) + 20px) 16px 22px}
+.band-in{max-width:760px; margin:0 auto; display:flex; align-items:center; gap:18px}
+.band img{width:84px; height:84px; flex:0 0 auto; border-radius:50%; box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+.band h1{font-size:34px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; line-height:1.05}
+.band .sub{font-family:var(--display); font-size:13px; letter-spacing:.22em; text-transform:uppercase; opacity:.85; margin-top:6px}
+
+.wrap{max-width:760px; margin:0 auto; padding:20px max(16px, env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); display:flex; flex-direction:column; gap:18px}
+.lead{color:var(--muted); max-width:62ch}
+.kicker{font-family:var(--display); font-size:12px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--muted)}
+
+.panel{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:12px}
+.progress-row{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.big{font-family:var(--display); font-size:30px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1.1}
+.bar{height:8px; background:var(--tint); border-radius:6px; overflow:hidden}
+.bar > span{display:block; height:100%; width:0; background:var(--brand); transition:width .3s}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bar > span{background:#4FBF6E}}
+:root[data-theme="dark"] .bar > span{background:#4FBF6E}
+.actions{display:flex; gap:10px; flex-wrap:wrap}
+button{font:inherit; font-size:15px; font-weight:600; border-radius:999px; padding:10px 16px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; min-height:44px}
+button.primary{background:var(--brand); border-color:var(--brand); color:var(--on-brand)}
+button:active{transform:translateY(1px)}
+
+.chips{display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch}
+.chip{flex:0 0 auto; display:flex; align-items:center; gap:6px; font-size:14px; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); text-decoration:none; min-height:36px}
+.chip b{font-family:var(--display); font-weight:600}
+.chip.done{background:var(--tint); border-color:var(--brand)}
+.chip.done::after{content:"✓"; color:var(--brand); font-weight:700}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip.done::after{color:#86D49B}}
+
+.kit{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px}
+.kit div{font-size:15px}
+.kit .kicker{display:block; margin-bottom:2px}
+
+details.level{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; scroll-margin-top:calc(env(safe-area-inset-top) + 12px)}
+summary{list-style:none; cursor:pointer; padding:14px 16px; display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center}
+summary::-webkit-details-marker{display:none}
+.num{width:50px; height:50px; border-radius:50%; display:grid; place-items:center; font-family:var(--display); font-size:22px; font-weight:600; color:var(--on-brand); background:var(--brand); box-shadow:inset 0 0 0 3px var(--brand), inset 0 0 0 4.5px rgba(255,255,255,.75)}
+.lvl-meta{display:flex; flex-direction:column; gap:2px; min-width:0}
+.lvl-meta h2{font-size:23px; font-weight:600; line-height:1.15}
+.cotes{font-family:var(--mono); font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
+.pill{font-size:13px; font-weight:700; padding:4px 10px; border-radius:999px; border:1px solid var(--line); white-space:nowrap; font-variant-numeric:tabular-nums}
+.pill.done{background:var(--brand); border-color:var(--brand); color:var(--on-brand)}
+.pill.wip{border-color:var(--brand); color:var(--ink)}
+.lvl-body{padding:16px 16px 18px; display:flex; flex-direction:column; gap:16px; border-top:1px solid var(--line)}
+.top-row{display:grid; grid-template-columns:1fr 220px; gap:16px; align-items:start}
+@media (max-width:600px){ .top-row{grid-template-columns:1fr} .drawing{max-width:260px} }
+.drawing{background:var(--tint); border-radius:10px; padding:10px}
+.drawing svg{display:block; width:100%; height:auto}
+.tools{display:flex; flex-wrap:wrap; gap:6px}
+.tool{font-size:14px; padding:4px 10px; border-radius:999px; background:var(--tint)}
+.tool kbd{font-family:var(--mono); font-size:12px; margin-left:6px; padding:0 5px; border:1px solid var(--line); border-radius:4px; background:var(--card)}
+
+ol.steps{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; counter-reset:s}
+ol.steps li{counter-increment:s}
+ol.steps label{display:grid; grid-template-columns:26px 26px 1fr; gap:8px; align-items:start; padding:10px 8px; border-radius:10px; cursor:pointer}
+ol.steps label:hover{background:var(--paper)}
+ol.steps label::before{content:counter(s); font-family:var(--display); font-size:14px; color:var(--muted); padding-top:2px; text-align:right}
+ol.steps input{width:22px; height:22px; margin:2px 0 0; accent-color:var(--brand)}
+ol.steps input:checked + span{color:var(--muted); text-decoration:line-through}
+code{font-family:var(--mono); font-size:.88em; background:var(--tint); border-radius:4px; padding:0 4px}
+
+.notes-box{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:600px){ .notes-box{grid-template-columns:1fr} }
+.note{padding:12px 14px; border-radius:10px; background:var(--paper); border-left:4px solid var(--brand); font-size:15px; display:flex; flex-direction:column; gap:4px}
+.note.warn{border-left-color:var(--x)}
+.doc{font-size:15px; display:flex; flex-wrap:wrap; gap:6px 16px}
+.mine label{display:block}
+textarea{width:100%; min-height:76px; font:inherit; font-size:16px; padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--paper); color:var(--ink); resize:vertical; margin-top:6px}
+.confirm{display:none; align-items:center; gap:10px; flex-wrap:wrap; font-size:15px}
+.confirm.show{display:flex}
+.msg{font-size:14px; color:var(--muted); min-height:1.2em}
+footer{font-size:14px; color:var(--muted); display:flex; flex-direction:column; gap:6px; align-items:center; text-align:center; padding-top:8px}
+footer img{width:44px; height:44px; border-radius:50%; opacity:.9}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; scroll-behavior:auto !important} }
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-in">
+    <img src="logo.svg" alt="Logo Apprenti 3D">
+    <div>
+      <h1>Apprenti 3D</h1>
+      <p class="sub">Apprendre SketchUp sur iPad</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<p class="lead">Sept niveaux pour dessiner des meubles dans SketchUp. Un meuble par niveau, des cotes réelles en millimètres. Coche chaque étape une fois faite dans SketchUp.</p>
+
+<section class="panel" aria-labelledby="prog-title">
+  <div class="progress-row">
+    <div>
+      <p class="kicker" id="prog-title">Ta progression</p>
+      <div class="big" id="prog-count">0 / 0</div>
+    </div>
+    <div class="actions">
+      <button class="primary" id="resume" type="button">Reprendre où j'en étais</button>
+    </div>
+  </div>
+  <div class="bar" role="progressbar" aria-labelledby="prog-title" id="bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="bar-fill"></span></div>
+  <nav class="chips" id="chips" aria-label="Niveaux"></nav>
+</section>
+
+<section class="panel" aria-labelledby="kit-title">
+  <p class="kicker" id="kit-title">Ton poste de travail</p>
+  <div class="kit">
+    <div><span class="kicker">Matériel</span>iPad 8, Apple Pencil, clavier.</div>
+    <div><span class="kicker">Limite à connaître</span>Pas de survol du crayon ni de double-tap sur le crayon : ces fonctions demandent un iPad à puce M.</div>
+    <div><span class="kicker">Disposition conseillée</span>Ouvre Apprenti 3D et SketchUp côte à côte en Split View.</div>
+  </div>
+</section>
+
+<main id="levels" style="display:flex;flex-direction:column;gap:14px"></main>
+
+<section class="panel" aria-labelledby="save-title">
+  <p class="kicker" id="save-title">Sauvegarde</p>
+  <p style="font-size:15px">Ta progression reste sur cet iPad. Copie-la de temps en temps dans une note : si tu effaces les données de Safari, tu pourras la recoller ici.</p>
+  <div class="actions">
+    <button id="export" type="button">Copier ma progression</button>
+    <button id="reset" type="button">Tout remettre à zéro</button>
+  </div>
+  <div class="confirm" id="confirm">
+    <span>Effacer toutes les coches et les notes ?</span>
+    <button class="primary" id="confirm-yes" type="button">Oui, effacer</button>
+    <button id="confirm-no" type="button">Annuler</button>
+  </div>
+  <label class="kicker" for="import-box">Coller une progression</label>
+  <textarea id="import-box" placeholder="Colle ici un code qui commence par ETABLI1:"></textarea>
+  <div class="actions"><button class="primary" id="import" type="button">Importer</button></div>
+  <p class="msg" id="msg" role="status"></p>
+</section>
+
+<footer>
+  <img src="logo.svg" alt="">
+  <p>Apprenti 3D</p>
+  <p>Noms d'outils en français puis en anglais. Contenu vérifié sur l'aide officielle SketchUp pour iPad en novembre 2026.</p>
+</footer>
+</div>
+
+<script>
+const HELP = "https://help.sketchup.com";
+const LEVELS = [
+{
+  id:"n0", meuble:"Réglages", titre:"Régler ton atelier", cotes:"Unités : millimètres", draw:"axes",
+  but:"Configurer l'app et bouger la vue sans y penser.",
+  tools:[["Orbite","1 doigt"],["Panoramique","2 doigts"],["Zoom","pincer"],["Annuler","tap 2 doigts"],["Refaire","tap 3 doigts"]],
+  steps:[
+    "Crée un nouveau modèle. Dans le menu déroulant de <b>Create new</b>, choisis un modèle en millimètres.",
+    "Ouvre <b>Réglages (Settings) › Pencil &amp; Multitouch</b>. Mets le crayon en mode <b>Just Draw</b>.",
+    "Repère les trois axes : rouge (X), vert (Y), bleu (Z, la hauteur). Ils se croisent à l'origine.",
+    "Dessine un rectangle au hasard. Tourne autour avec 1 doigt, déplace la vue avec 2 doigts, zoome en pinçant.",
+    "Fais un pincement rapide pour recadrer tout le modèle. Recommence trois fois pour l'avoir en réflexe.",
+    "Annule avec un tap à deux doigts. Refais avec un tap à trois doigts.",
+    "Sur le clavier, maintiens <b>Cmd</b> pour afficher la liste des raccourcis."
+  ],
+  astuce:"Sans survol du crayon, la précision vient du zoom. Zoome fort avant de poser la pointe sur un coin ou un milieu.",
+  piege:"La paume posée sur l'écran fait tourner la vue. Si ça arrive souvent, un réglage permet de désactiver l'orbite à un doigt.",
+  doc:[["Prise en main", HELP+"/fr/sketchup-ipad/getting-started"],["Panneau Réglages", HELP+"/sketchup-ipad/settings-panel"]]
+},
+{
+  id:"n1", meuble:"Planche", titre:"Ton premier volume", cotes:"800 × 250 × 18 mm", draw:"planche",
+  but:"Créer un volume aux cotes exactes avec deux outils seulement.",
+  tools:[["Rectangle","R"],["Pousser/Tirer (Push-Pull)","P"],["Mètre (Tape Measure)","T"],["Gomme (Eraser)","E"]],
+  steps:[
+    "Prends le <b>Rectangle</b> (R). Pose un coin sur l'origine.",
+    "Tire en diagonale et lâche. Tape aussitôt <code>800;250</code> et valide. Si le point-virgule est refusé, essaie la virgule : le séparateur dépend de la langue de l'iPad.",
+    "Sans clavier, touche la boîte de mesures : un pavé numérique s'ouvre.",
+    "Prends <b>Pousser/Tirer</b> (P). Tire la face vers le haut, tape <code>18</code>, valide.",
+    "Vérifie l'épaisseur au <b>Mètre</b> (T), d'une arête à l'autre.",
+    "Efface une arête du dessus avec la <b>Gomme</b> (E). La face disparaît. Annule."
+  ],
+  astuce:"Une face n'existe que si ses arêtes forment un contour fermé et plat. Comme au débit : un contour, puis une épaisseur.",
+  piege:"Taper la cote trop tard. Tape-la juste après avoir lâché, avant de toucher autre chose.",
+  doc:[["Outil Ligne sur iPad", HELP+"/en/sketchup-ipad/line-tool"],["Boîte de mesures", HELP+"/fr/using-measurements-box"]]
+},
+{
+  id:"n2", meuble:"Tabouret", titre:"Groupes et composants", cotes:"Assise 350 × 350 × 22 · pieds 40 × 40 × 428 · H 450", draw:"tabouret",
+  but:"Comprendre pourquoi chaque pièce doit vivre dans son propre composant.",
+  tools:[["Sélection (Select)","Espace"],["Déplacer (Move)","M"],["Mode Copier (Copy)",""],["Créer un composant",""]],
+  steps:[
+    "Dessine un carré <code>40;40</code> sur l'origine. Tire-le de <code>428</code>.",
+    "Sélectionne tout le pied d'un triple tap.",
+    "Dans la barre du menu contextuel, choisis <b>Créer un composant (Make Component)</b>. Nomme-le « Pied ».",
+    "Prends <b>Déplacer</b> (M) et active le mode <b>Copier</b>. Copie le pied de <code>310</code> le long de l'axe rouge.",
+    "Sélectionne les deux pieds. Copie-les de <code>310</code> le long de l'axe vert.",
+    "Dessine l'assise <code>350;350</code> sur le dessus des pieds, tire-la de <code>22</code>. Fais-en un groupe.",
+    "Double-tape un pied pour l'éditer. Tire son pied de 30 mm vers le bas : les quatre bougent ensemble. Annule."
+  ],
+  astuce:"Une pièce débitée égale un composant. Une modification touche toutes les pièces identiques, et la liste des composants devient ta feuille de débit.",
+  piege:"Dessiner l'assise sans grouper. Sa géométrie se colle aux pieds et tout devient un bloc impossible à séparer.",
+  doc:[["Panneau Outliner", HELP+"/fr/sketchup-ipad/outliner-panel"]]
+},
+{
+  id:"n3", meuble:"Caisson", titre:"Précision : guides et verrous", cotes:"H 600 × L 400 × P 350 · panneaux 18 · fond 5", draw:"caisson",
+  but:"Placer chaque panneau au millimètre sans calcul hasardeux.",
+  tools:[["Mètre (guides)","T"],["Verrou X/Y/Z",""],["Outliner",""]],
+  steps:[
+    "Côté gauche : rectangle <code>18;350</code> au sol, tire de <code>600</code>. Composant « Côté ».",
+    "Active le verrou rouge (<b>Lock X</b>), puis copie le côté de <code>382</code> (400 − 18).",
+    "Dessous : rectangle <code>364;350</code> au sol entre les côtés, tire de <code>18</code>. Composant « Traverse ».",
+    "Active le verrou bleu (<b>Lock Z</b>), copie la traverse de <code>582</code> vers le haut. Voilà le dessus.",
+    "Avec le <b>Mètre</b>, tire un guide à <code>10</code> mm du chant arrière, sur le dessus du dessous. La face avant reste ouverte.",
+    "Fond : rectangle <code>364;5</code> contre le guide, tire de <code>564</code>. Composant « Fond ».",
+    "Ouvre l'<b>Outliner</b>. Tu dois lire : Côté ×2, Traverse ×2, Fond."
+  ],
+  astuce:"Les verrous d'axe ne valent que pour une seule opération. Réactive-les à chaque tracé ou déplacement.",
+  piege:"L'inférence accroche le mauvais point quand la vue est trop loin. Zoome avant de poser.",
+  doc:[["Mètre et rapporteur", HELP+"/en/sketchup-ipad/measurement-tools"],["Barre d'outils principale", HELP+"/en/sketchup-ipad/ipad-main-toolbar"]]
+},
+{
+  id:"n4", meuble:"Étagère murale", titre:"Copies en série", cotes:"L 900 × H 1000 × P 200 · 4 tablettes 864 × 200 × 18", draw:"etagere",
+  but:"Répartir des pièces à intervalles égaux en une seule opération.",
+  tools:[["Déplacer + Copier","M"],["Série x",""],["Division /",""]],
+  steps:[
+    "Montant : rectangle <code>18;200</code>, tire de <code>1000</code>. Composant « Montant ».",
+    "Copie-le de <code>882</code> sur l'axe rouge.",
+    "Tablette basse : <code>864;200</code> entre les montants, tire de <code>18</code>. Composant « Tablette ».",
+    "Sélectionne la tablette. Déplacer en mode Copier, verrou bleu, copie-la de <code>982</code> vers le haut.",
+    "Juste après, tape <code>/3</code> et valide. Deux tablettes s'insèrent à distance égale. Si rien ne bouge, essaie <code>3/</code>.",
+    "Mesure au Mètre l'écart entre deux dessus de tablettes : environ 327 mm.",
+    "Autre méthode : annule, copie la tablette de <code>327</code> puis tape <code>x3</code>."
+  ],
+  astuce:"x répète la même distance vers l'extérieur. La barre / divise l'espace entre l'original et la copie. Pour des tablettes régulières, / évite tout calcul.",
+  piege:"Changer d'outil avant de taper x ou /. La série ne marche que juste après la copie.",
+  doc:[["Séries dans la boîte de mesures", HELP+"/fr/using-measurements-box"]]
+},
+{
+  id:"n5", meuble:"Table d'appoint", titre:"Tenons et mortaises", cotes:"Plateau 500 × 500 × 22 · pieds 45 × 45 × 528 · ceinture 80 × 20 · H 550", draw:"table",
+  but:"Dessiner un vrai assemblage et orienter les pieds par rotation.",
+  tools:[["Décalage (Offset)","F"],["Rotation (Rotate)","Q"],["Édition de composant",""]],
+  steps:[
+    "Pied : <code>45;45</code>, tire de <code>528</code>. Composant « Pied ».",
+    "Traverse à part : <code>370;20</code>, tire de <code>80</code>. Composant « Traverse ».",
+    "Tenon : édite la traverse. Sur un bout, prends <b>Décalage</b>, tape <code>7</code>. Tire le rectangle intérieur de <code>25</code>. Même chose à l'autre bout. Tenon : 6 × 66 × 25.",
+    "Mortaise : édite le pied. Trace des guides à <code>17</code> et <code>23</code> mm du nu extérieur, à <code>7</code> et <code>73</code> mm du haut.",
+    "Dessine le rectangle sur ces guides, pousse-le de <code>26</code> vers l'intérieur. Le millimètre en plus laisse de la place à la colle.",
+    "Fais la seconde mortaise sur la face voisine. Le pied a deux mortaises en équerre.",
+    "Copie le pied de <code>415</code>, puis tourne la copie avec <b>Rotation</b> (Q) pour que ses mortaises regardent l'intérieur. Complète les quatre coins.",
+    "Place les traverses, tenons dans les mortaises. Plateau <code>500;500</code>, tire de <code>22</code>, 20 mm de débord tout autour.",
+    "Masque un pied dans l'Outliner pour voir le tenon en place."
+  ],
+  astuce:"Dessine l'assemblage dans le composant, jamais à côté. Corriger une mortaise corrige alors les quatre pieds.",
+  piege:"Tourner autour du mauvais point. Pose le centre de rotation sur un repère net, puis choisis l'axe bleu.",
+  doc:[["Outil Décalage", HELP+"/fr/sketchup-ipad/offset-tool"]]
+},
+{
+  id:"n6", meuble:"Banc", titre:"Finitions et présentation", cotes:"L 1200 × P 300 × H 450 · plateau 28 · chanfrein 3", draw:"banc",
+  but:"Finir un meuble complet en autonomie et le présenter.",
+  tools:[["Suivez-moi (Follow Me)",""],["Pot de peinture (Paint Bucket)","B"],["Scènes",""]],
+  steps:[
+    "Modélise le banc sans aide : plateau 1200 × 300 × 28, deux jambes 300 × 422 × 28 en retrait de 100 mm, une traverse dessous.",
+    "Chanfrein : édite le plateau. Au bout d'une arête du dessus, dessine un triangle 3 × 3 sur le chant.",
+    "Sélectionne les arêtes du dessus (le chemin), puis le triangle. Lance <b>Suivez-moi</b>.",
+    "Applique un bois avec le <b>Pot de peinture</b> (B). Peins chaque composant de l'extérieur, pas ses faces.",
+    "Crée deux scènes : une vue de face, une vue 3D.",
+    "Sauvegarde. Les fichiers locaux sont dans <b>Fichiers › Sur mon iPad › SketchUp</b>. Copies-en un ailleurs : supprimer l'app efface ce dossier."
+  ],
+  astuce:"Peindre le composant entier plutôt que ses faces. Changer d'essence se fait ensuite en un geste.",
+  piege:"Un Suivez-moi qui part de travers. Le profil doit toucher le début du chemin.",
+  doc:[["Outil Suivez-moi", HELP+"/fr/sketchup-ipad/follow-me-tool"],["Panneau Matériaux", HELP+"/fr/sketchup-ipad/materials-panel"]]
+}
+];
+
+/* ---------- Dessins isométriques ---------- */
+function isoSVG(boxes){
+  const c=Math.cos(Math.PI/6), s=Math.sin(Math.PI/6);
+  const P=(x,y,z)=>[(x-y)*c, (x+y)*s - z];
+  const pts=[]; boxes.forEach(b=>{const [x,y,z,w,d,h]=b;[[x,y,z],[x+w,y,z],[x,y+d,z],[x+w,y+d,z],[x,y,z+h],[x+w,y,z+h],[x,y+d,z+h],[x+w,y+d,z+h]].forEach(p=>pts.push(P(...p)));});
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
+  const pad=(maxX-minX)*0.06+4, W=maxX-minX+pad*2, H=maxY-minY+pad*2;
+  const sw=Math.max(W,H)/220;
+  const sorted=boxes.slice().sort((a,b)=>(a[0]+a[3]/2+a[1]+a[4]/2+a[2]+a[5]/2)-(b[0]+b[3]/2+b[1]+b[4]/2+b[2]+b[5]/2));
+  const poly=(arr,cls)=>`<polygon class="${cls}" points="${arr.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ")}"/>`;
+  let out="";
+  sorted.forEach(([x,y,z,w,d,h])=>{
+    const top=[P(x,y,z+h),P(x+w,y,z+h),P(x+w,y+d,z+h),P(x,y+d,z+h)];
+    const right=[P(x+w,y,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x+w,y,z+h)];
+    const left=[P(x,y+d,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x,y+d,z+h)];
+    out+=poly(right,"fr")+poly(left,"fl")+poly(top,"ft");
+  });
+  return `<svg viewBox="${(minX-pad).toFixed(1)} ${(minY-pad).toFixed(1)} ${W.toFixed(1)} ${H.toFixed(1)}" role="img" aria-hidden="true"><style>polygon{stroke:var(--wood-edge);stroke-width:${sw.toFixed(2)};stroke-linejoin:round}.ft{fill:var(--wood-top)}.fl{fill:var(--wood-l)}.fr{fill:var(--wood-r)}</style>${out}</svg>`;
+}
+function axesSVG(){
+  const c=Math.cos(Math.PI/6), s=Math.sin(Math.PI/6), L=80;
+  const o=[110,95];
+  const tip=(dx,dy)=>[o[0]+dx,o[1]+dy];
+  const X=tip(L*c,L*s), Y=tip(-L*c,L*s), Z=tip(0,-L);
+  const line=(p,col,dash)=>`<line x1="${o[0]}" y1="${o[1]}" x2="${p[0].toFixed(1)}" y2="${p[1].toFixed(1)}" stroke="var(${col})" stroke-width="3" stroke-linecap="round"/>`+
+    `<line x1="${o[0]}" y1="${o[1]}" x2="${(2*o[0]-p[0]).toFixed(1)}" y2="${(2*o[1]-p[1]).toFixed(1)}" stroke="var(${col})" stroke-width="2" stroke-dasharray="4 5" opacity=".6"/>`;
+  const t=(p,txt,col)=>`<text x="${p[0].toFixed(1)}" y="${p[1].toFixed(1)}" fill="var(${col})" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600" text-anchor="middle">${txt}</text>`;
+  return `<svg viewBox="0 0 220 190" role="img" aria-hidden="true">${line(X,"--x")}${line(Y,"--y")}${line(Z,"--z")}${t([X[0]+4,X[1]+18],"X","--x")}${t([Y[0]-4,Y[1]+18],"Y","--y")}${t([Z[0]+16,Z[1]+4],"Z","--z")}<circle cx="${o[0]}" cy="${o[1]}" r="4" fill="var(--ink)"/></svg>`;
+}
+const DRAW={
+  axes:()=>axesSVG(),
+  planche:()=>isoSVG([[0,0,0,800,250,18]]),
+  tabouret:()=>{const l=[];[[0,0],[310,0],[0,310],[310,310]].forEach(([x,y])=>l.push([x,y,0,40,40,428]));l.push([0,0,428,350,350,22]);return isoSVG(l);},
+  caisson:()=>isoSVG([[0,0,0,18,350,600],[18,10,18,364,5,564],[18,0,0,364,350,18],[18,0,582,364,350,18],[382,0,0,18,350,600]]),
+  etagere:()=>{const l=[[0,0,0,18,200,1000]];[0,327,655,982].forEach(z=>l.push([18,0,z,864,200,18]));l.push([882,0,0,18,200,1000]);return isoSVG(l);},
+  table:()=>{const l=[];const p=[[20,20],[435,20],[20,435],[435,435]];p.forEach(([x,y])=>l.push([x,y,0,45,45,528]));
+    l.push([65,30,448,370,20,80],[65,445,448,370,20,80],[30,65,448,20,370,80],[445,65,448,20,370,80]);l.push([0,0,528,500,500,22]);return isoSVG(l);},
+  banc:()=>isoSVG([[100,0,0,28,300,422],[436,140,322,628,20,90],[1072,0,0,28,300,422],[0,0,422,1200,300,28]])
+};
+
+
+/* ---------- État ---------- */
+const KEY="etabli3d-v1";
+let state={done:{},notes:{}};
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&typeof s==="object")state={done:s.done||{},notes:s.notes||{}};}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+load();
+try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+
+/* ---------- Rendu ---------- */
+const levelsEl=document.getElementById("levels"), chipsEl=document.getElementById("chips");
+const total=LEVELS.reduce((n,l)=>n+l.steps.length,0);
+const isDone=(lid,i)=>!!state.done[lid+"-"+i];
+const countLevel=l=>l.steps.reduce((n,_,i)=>n+(isDone(l.id,i)?1:0),0);
+function firstOpenLevel(){const l=LEVELS.find(l=>countLevel(l)<l.steps.length);return l?l.id:LEVELS[LEVELS.length-1].id;}
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+function buildLevels(){
+  const current=firstOpenLevel();
+  levelsEl.innerHTML=LEVELS.map((l,li)=>`
+  <details class="level" id="${l.id}" ${l.id===current?"open":""}>
+    <summary>
+      <span class="num">${li}</span>
+      <span class="lvl-meta">
+        <span class="kicker">Niveau ${li} · ${l.meuble}</span>
+        <h2>${l.titre}</h2>
+        <span class="cotes">${l.cotes}</span>
+      </span>
+      <span class="pill" data-pill="${l.id}"></span>
+    </summary>
+    <div class="lvl-body">
+      <div class="top-row">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <p><b>Objectif.</b> ${l.but}</p>
+          <div>
+            <p class="kicker" style="margin-bottom:6px">Outils du niveau</p>
+            <div class="tools">${l.tools.map(([n,k])=>`<span class="tool">${n}${k?`<kbd>${k}</kbd>`:""}</span>`).join("")}</div>
+          </div>
+        </div>
+        <div class="drawing">${DRAW[l.draw]()}</div>
+      </div>
+      <div>
+        <p class="kicker" style="margin-bottom:4px">Étapes dans SketchUp</p>
+        <ol class="steps">${l.steps.map((t,i)=>`<li><label for="c-${l.id}-${i}"><input type="checkbox" id="c-${l.id}-${i}" data-k="${l.id}-${i}" ${isDone(l.id,i)?"checked":""}><span>${t}</span></label></li>`).join("")}</ol>
+      </div>
+      <div class="notes-box">
+        <div class="note"><span class="kicker">Astuce d'atelier</span><span>${l.astuce}</span></div>
+        <div class="note warn"><span class="kicker">Piège fréquent</span><span>${l.piege}</span></div>
+      </div>
+      <div class="mine">
+        <label class="kicker" for="n-${l.id}">Mes notes</label>
+        <textarea id="n-${l.id}" data-n="${l.id}" placeholder="Ce qui a coincé, ce que tu as trouvé…">${esc(state.notes[l.id]||"")}</textarea>
+      </div>
+      <div class="doc"><span style="color:var(--muted)">Aide officielle :</span>${l.doc.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join("")}</div>
+    </div>
+  </details>`).join("");
+}
+function updateStatus(){
+  let doneAll=0;
+  LEVELS.forEach(l=>{
+    const n=countLevel(l); doneAll+=n;
+    const pill=levelsEl.querySelector(`[data-pill="${l.id}"]`);
+    if(pill){pill.className="pill"+(n===l.steps.length?" done":n>0?" wip":""); pill.textContent=n===l.steps.length?"Terminé":`${n} / ${l.steps.length}`;}
+  });
+  chipsEl.innerHTML=LEVELS.map((l,li)=>`<a class="chip${countLevel(l)===l.steps.length?" done":""}" href="#${l.id}" data-go="${l.id}"><b>${li}</b>${l.meuble}</a>`).join("");
+  document.getElementById("prog-count").textContent=`${doneAll} / ${total} étapes`;
+  const pct=Math.round(doneAll/total*100);
+  document.getElementById("bar-fill").style.width=pct+"%";
+  document.getElementById("bar").setAttribute("aria-valuenow",pct);
+}
+function renderAll(){buildLevels(); updateStatus();}
+function go(id){
+  const d=document.getElementById(id); if(!d) return;
+  d.open=true;
+  const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  d.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+}
+levelsEl.addEventListener("change",e=>{
+  const k=e.target.dataset&&e.target.dataset.k; if(!k) return;
+  if(e.target.checked) state.done[k]=true; else delete state.done[k];
+  save(); updateStatus();
+});
+let noteTimer=null;
+levelsEl.addEventListener("input",e=>{
+  const id=e.target.dataset&&e.target.dataset.n; if(!id) return;
+  state.notes[id]=e.target.value; clearTimeout(noteTimer); noteTimer=setTimeout(save,400);
+});
+chipsEl.addEventListener("click",e=>{const a=e.target.closest("[data-go]"); if(!a) return; e.preventDefault(); go(a.dataset.go);});
+document.getElementById("resume").addEventListener("click",()=>{
+  const id=firstOpenLevel(); go(id);
+  const l=LEVELS.find(x=>x.id===id); const i=l.steps.findIndex((_,j)=>!isDone(id,j));
+  if(i>=0){const cb=document.getElementById(`c-${id}-${i}`); if(cb) setTimeout(()=>cb.focus({preventScroll:true}),400);}
+});
+
+/* ---------- Sauvegarde, import, export ---------- */
+const msg=document.getElementById("msg");
+const encode=o=>"ETABLI1:"+btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+function decode(t){
+  const m=String(t).trim().match(/ETABLI1:([A-Za-z0-9+/=]+)/); if(!m) throw new Error("format");
+  const o=JSON.parse(decodeURIComponent(escape(atob(m[1])))); if(!o||typeof o!=="object") throw new Error("format"); return o;
+}
+document.getElementById("export").addEventListener("click",async()=>{
+  const code=encode({done:state.done,notes:state.notes});
+  try{await navigator.clipboard.writeText(code); msg.textContent="Progression copiée. Colle-la dans une note pour la garder.";}
+  catch(e){const box=document.getElementById("import-box"); box.value=code; box.focus(); box.select(); msg.textContent="Copie automatique refusée : le code est dans le champ, copie-le à la main.";}
+});
+document.getElementById("import").addEventListener("click",()=>{
+  const box=document.getElementById("import-box");
+  try{
+    const o=decode(box.value); let n=0;
+    Object.keys(o.done||{}).forEach(k=>{ if(/^n\d-\d+$/.test(k)&&!state.done[k]){state.done[k]=true;n++;} });
+    Object.entries(o.notes||{}).forEach(([k,v])=>{ if(typeof v==="string"&&v.trim()){ const cur=state.notes[k]||""; state.notes[k]=cur&&cur!==v?cur+"\n"+v:v; } });
+    save(); renderAll(); box.value=""; msg.textContent=`Importé : ${n} étape${n>1?"s":""} ajoutée${n>1?"s":""}, notes fusionnées.`;
+  }catch(e){ msg.textContent="Code non reconnu. Il doit commencer par ETABLI1: et être collé en entier."; }
+});
+const confirmEl=document.getElementById("confirm");
+document.getElementById("reset").addEventListener("click",()=>confirmEl.classList.add("show"));
+document.getElementById("confirm-no").addEventListener("click",()=>confirmEl.classList.remove("show"));
+document.getElementById("confirm-yes").addEventListener("click",()=>{
+  state={done:{},notes:{}}; save(); confirmEl.classList.remove("show"); renderAll(); msg.textContent="Progression remise à zéro.";
+});
+function onHash(){const h=location.hash.slice(1); if(h&&LEVELS.some(l=>l.id===h)) go(h);}
+window.addEventListener("hashchange",onHash);
+renderAll(); onHash();
+
+/* ---------- Hors ligne ---------- */
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{ try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){} });
+}
+</script>
+</body>
+</html>
