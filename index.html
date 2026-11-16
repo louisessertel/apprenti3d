@@ -141,7 +141,7 @@ footer img{width:44px; height:44px; border-radius:50%; opacity:.9}
 </header>
 
 <div class="wrap">
-<p class="lead">Sept niveaux pour dessiner des meubles dans SketchUp. Un meuble par niveau, des cotes réelles en millimètres. Coche chaque étape une fois faite dans SketchUp.</p>
+<p class="lead">Neuf niveaux pour dessiner des meubles dans SketchUp. Un meuble par niveau, des cotes réelles en millimètres. Coche chaque étape une fois faite dans SketchUp.</p>
 
 <section class="panel" aria-labelledby="prog-title">
   <div class="progress-row">
@@ -163,6 +163,20 @@ footer img{width:44px; height:44px; border-radius:50%; opacity:.9}
     <div><span class="kicker">Matériel</span>iPad 8, Apple Pencil, clavier.</div>
     <div><span class="kicker">Limite à connaître</span>Pas de survol du crayon ni de double-tap sur le crayon : ces fonctions demandent un iPad à puce M.</div>
     <div><span class="kicker">Disposition conseillée</span>Ouvre Apprenti 3D et SketchUp côte à côte en Split View.</div>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="lex-title">
+  <p class="kicker" id="lex-title">Petit lexique</p>
+  <div class="kit">
+    <div><span class="kicker">Arête</span>Un trait. C'est le bord d'une face.</div>
+    <div><span class="kicker">Face</span>La surface qui se remplit quand des arêtes forment un contour fermé et plat.</div>
+    <div><span class="kicker">Origine et axes</span>Le point où se croisent l'axe rouge (X), le vert (Y) et le bleu (Z, la hauteur).</div>
+    <div><span class="kicker">Inférence</span>Le petit point de couleur qui montre où tu vises : un bout, un milieu, un trait.</div>
+    <div><span class="kicker">Boîte de mesures</span>L'endroit où tu tapes une longueur ou un angle, juste après un geste.</div>
+    <div><span class="kicker">Sélection</span>Ce qui est en bleu. Le prochain outil agit dessus.</div>
+    <div><span class="kicker">Groupe, composant</span>Une pièce mise à part pour qu'elle ne se colle pas aux autres. Vu au niveau du tabouret.</div>
+    <div><span class="kicker">Annuler</span>Tap à deux doigts. Refaire : tap à trois doigts.</div>
   </div>
 </section>
 
@@ -212,6 +226,46 @@ const LEVELS = [
   astuce:"Sans survol du crayon, la précision vient du zoom. Zoome fort avant de poser la pointe sur un coin ou un milieu.",
   piege:"La paume posée sur l'écran fait tourner la vue. Si ça arrive souvent, un réglage permet de désactiver l'orbite à un doigt.",
   doc:[["Prise en main", HELP+"/fr/sketchup-ipad/getting-started"],["Panneau Réglages", HELP+"/sketchup-ipad/settings-panel"]]
+},
+{
+  id:"n7", meuble:"Traits", titre:"Premiers traits", cotes:"Exercices au sol · en mm", draw:"formes",
+  but:"Apprendre à tracer un trait, un triangle, un rectangle, un cercle et un arc.",
+  tools:[["Ligne (Line)","L"],["Rectangle","R"],["Cercle (Circle)","C"],["Polygone (Polygon)",""],["Arc","A"]],
+  steps:[
+    "Crée un nouveau modèle en millimètres. Les outils sont les icônes rangées sur le côté de l'écran : touche une icône pour prendre l'outil. Au clavier, la lettre indiquée ici fait la même chose.",
+    "Prends la <b>Ligne</b> (L). Pose la pointe du crayon sur l'origine, là où les trois axes se croisent. Glisse vers la droite en suivant l'axe rouge, puis lève le crayon. Tu as tracé un trait.",
+    "Donne-lui une longueur exacte. Juste après avoir levé le crayon, tape <code>500</code> au clavier puis Entrée. Sans clavier, touche la boîte de mesures : un pavé numérique s'ouvre. Le trait fait maintenant 500 mm.",
+    "<b>Triangle</b> : avec la Ligne, trace trois traits à la suite et termine exactement sur ton point de départ. Quand le contour se ferme, l'intérieur se remplit. Cette surface s'appelle une <b>face</b>.",
+    "Approche la pointe d'un trait sans toucher l'écran trop vite et observe les petits points de couleur : vert au bout, bleu clair au milieu, rouge sur le trait. Ce sont les <b>inférences</b>, elles t'aident à viser juste. Zoome si tu ne les vois pas.",
+    "<b>Rectangle</b> (R) : pose un coin, glisse en diagonale, lève le crayon. Tape <code>400;300</code> puis Entrée : il fait 400 mm sur 300 mm.",
+    "<b>Cercle</b> (C) : pose le centre, glisse vers l'extérieur, lève le crayon. Tape <code>200</code> puis Entrée : c'est le rayon.",
+    "<b>Polygone</b> : il dessine des formes à côtés égaux. Touche son mode <b>Diminuer les segments</b> jusqu'à lire 3 : tu obtiens un triangle parfait. Remonte à 6 pour un hexagone.",
+    "<b>Arc</b> (A) : pose un premier point, puis un second, puis éloigne la pointe pour bomber la courbe. Pas besoin d'être précis : c'est pour sentir l'outil.",
+    "Rate exprès un tracé, puis annule avec un tap à deux doigts. Annuler est ton filet de sécurité : sers-t'en sans hésiter."
+  ],
+  astuce:"Commence chaque tracé sur quelque chose : l'origine, un axe ou un trait déjà tracé. Le point de couleur te confirme que SketchUp a compris où tu vises.",
+  piege:"Lever le crayon trop tôt. En mode Just Draw, le tracé se termine dès que la pointe quitte l'écran : garde-la posée jusqu'au bon endroit.",
+  doc:[["Outil Polygone", HELP+"/fr/sketchup-ipad/polygon-tool"],["Tracer des arcs", HELP+"/sketchup/drawing-arcs"]]
+},
+{
+  id:"n8", meuble:"Outils", titre:"Premiers outils", cotes:"Sur les formes du niveau précédent", draw:"outils",
+  but:"Transformer tes formes en volumes et essayer les outils qui servent dans chaque meuble.",
+  tools:[["Pousser/Tirer","P"],["Sélection (Select)","Espace"],["Déplacer (Move)","M"],["Rotation (Rotate)","Q"],["Échelle (Scale)","S"],["Mètre (Tape Measure)","T"],["Gomme (Eraser)","E"],["Pot de peinture","B"]],
+  steps:[
+    "<b>Pousser/Tirer</b> (P) : pose la pointe sur la face du rectangle et tire vers le haut. Tape <code>100</code> puis Entrée. Ta forme plate devient un volume.",
+    "Fais pareil avec le triangle et le cercle. Tu viens de faire un prisme et un cylindre.",
+    "<b>Sélection</b> (Espace) : touche une face, elle passe en bleu. Touche dans le vide pour tout désélectionner. Le bleu veut dire : c'est sur ça que le prochain outil va agir.",
+    "Pour prendre un objet entier, touche-le trois fois rapidement avec la Sélection. Si ça ne marche pas, glisse autour de l'objet pour l'entourer.",
+    "<b>Déplacer</b> (M) : sélectionne le cylindre, prends Déplacer, pose la pointe dessus et glisse. Lève le crayon pour le poser ailleurs.",
+    "<b>Rotation</b> (Q) : sélectionne le prisme. Pose le centre de rotation au sol, puis un point de départ, puis tourne. Tape <code>90</code> puis Entrée pour un quart de tour exact.",
+    "<b>Échelle</b> (S) : sélectionne le volume du rectangle. Des poignées apparaissent autour. Tire une poignée d'angle, tape <code>2</code> puis Entrée : il double de taille.",
+    "<b>Mètre</b> (T) : touche un bout d'un trait, puis l'autre bout. La longueur s'affiche dans la boîte de mesures. C'est ton mètre ruban.",
+    "<b>Gomme</b> (E) : passe sur un trait du dessus d'un volume. Le trait disparaît, et la face qu'il bordait aussi. Annule d'un tap à deux doigts.",
+    "<b>Pot de peinture</b> (B) : choisis un bois dans les matériaux et touche une face. Pour finir, sélectionne tout et supprime : la table est propre pour la planche."
+  ],
+  astuce:"Sélectionne d'abord, agis ensuite. Déplacer, Rotation et Échelle s'appliquent à ce qui est en bleu.",
+  piege:"Oublier ce qui est sélectionné. Si un outil bouge autre chose que prévu, touche dans le vide pour tout désélectionner et recommence.",
+  doc:[["Mètre et rapporteur", HELP+"/en/sketchup-ipad/measurement-tools"],["Outil Gomme", HELP+"/en/sketchup-ipad/eraser-tool"]]
 },
 {
   id:"n1", meuble:"Planche", titre:"Ton premier volume", cotes:"800 × 250 × 18 mm", draw:"planche",
@@ -348,6 +402,22 @@ function axesSVG(){
   return `<svg viewBox="0 0 220 190" role="img" aria-hidden="true">${line(X,"--x")}${line(Y,"--y")}${line(Z,"--z")}${t([X[0]+4,X[1]+18],"X","--x")}${t([Y[0]-4,Y[1]+18],"Y","--y")}${t([Z[0]+16,Z[1]+4],"Z","--z")}<circle cx="${o[0]}" cy="${o[1]}" r="4" fill="var(--ink)"/></svg>`;
 }
 const DRAW={
+  outils:()=>isoSVG([[0,0,0,400,300,100],[520,40,0,160,160,260]]),
+  formes:()=>{
+    const c=Math.cos(Math.PI/6), s=Math.sin(Math.PI/6), P=(x,y)=>[(x-y)*c,(x+y)*s];
+    const poly=(pts,f)=>`<polygon points="${pts.map(p=>P(...p).map(v=>v.toFixed(1)).join(",")).join(" ")}" fill="${f}" stroke="var(--wood-edge)" stroke-width="5" stroke-linejoin="round"/>`;
+    const circ=(cx,cy,r,n)=>Array.from({length:n},(_,k)=>[cx+r*Math.cos(2*Math.PI*k/n),cy+r*Math.sin(2*Math.PI*k/n)]);
+    const rect=[[0,0],[400,0],[400,300],[0,300]];
+    const ring=circ(720,170,170,32), hole=circ(720,170,120,32);
+    const tri=[[80,520],[360,470],[200,720]];
+    let o=poly(rect,"var(--wood-top)");
+    o+=`<line x1="${P(200,0)[0]}" y1="${P(200,0)[1]}" x2="${P(200,300)[0]}" y2="${P(200,300)[1]}" stroke="var(--wood-edge)" stroke-width="5"/>`;
+    o+=poly(ring,"var(--wood-l)")+poly(hole,"var(--tint)");
+    o+=poly(tri,"var(--wood-r)");
+    const L0=P(520,520),L1=P(900,520);
+    o+=`<line x1="${L0[0]}" y1="${L0[1]}" x2="${L1[0]}" y2="${L1[1]}" stroke="var(--x)" stroke-width="7" stroke-linecap="round"/><circle cx="${L0[0]}" cy="${L0[1]}" r="12" fill="var(--y)"/><circle cx="${((L0[0]+L1[0])/2).toFixed(1)}" cy="${((L0[1]+L1[1])/2).toFixed(1)}" r="12" fill="#2BB3D6"/>`;
+    return `<svg viewBox="-460 -60 1440 760" role="img" aria-hidden="true">${o}</svg>`;
+  },
   axes:()=>axesSVG(),
   planche:()=>isoSVG([[0,0,0,800,250,18]]),
   tabouret:()=>{const l=[];[[0,0],[310,0],[0,310],[310,310]].forEach(([x,y])=>l.push([x,y,0,40,40,428]));l.push([0,0,428,350,350,22]);return isoSVG(l);},

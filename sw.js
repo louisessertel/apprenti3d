@@ -1,6 +1,6 @@
 // Apprenti 3D : fonctionnement hors ligne.
 // Pour publier une mise à jour, change le numéro de version ci-dessous.
-const VERSION = "apprenti3d-v6";
+const VERSION = "apprenti3d-v8";
 const FILES = ["./", "index.html", "manifest.webmanifest", "logo.svg", "apple-touch-icon.png", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
